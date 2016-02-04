@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+project.ext {
+    dropwizardVersion = '0.9.2'
+    dropwizardJava8Version = '0.9.0-1'
+    slf4jVersion = '1.7.14'
+    testNGVersion = '6.9.10'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+            "io.dropwizard:dropwizard-core:$dropwizardVersion",
+            "io.dropwizard:dropwizard-testing:$dropwizardVersion",
+            "io.dropwizard.modules:dropwizard-java8:$dropwizardJava8Version",
+//            "io.dropwizard.modules:dropwizard-java8-auth:$dropwizardJava8Version",
+//            "io.dropwizard.modules:dropwizard-java8-jdbi:$dropwizardJava8Version",
+            "org.slf4j:slf4j-api:$slf4jVersion"
+    )
+    testCompile "org.testng:testng:$testNGVersion"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+apply plugin: 'application'
+
+mainClassName = 'com.example.helloworld.HelloWorldApplication'
+
+// Configure the run task to start the Dropwizard service
+run {
+    args 'server', 'hello-world.yml'
+}
+
+test {
+    // show standard out and standard error of the test JVM(s) on the console
+    testLogging {
+        showStandardStreams = true
+        displayGranularity = 2
+        exceptionFormat = 'full'
+        events 'started', 'passed'
+    }
+}
